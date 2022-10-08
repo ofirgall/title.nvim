@@ -1,18 +1,23 @@
 local M = {}
-
----@type Title[]
-local titles = {}
-
+local api = vim.api
+local common = require('title-nvim.common')
 
 --- @class Title
+--- @field namespace number
+--- @field buf number
+--
 --- @field text string
 --- @field len number
 --- @field filler_seq string
 --- @field lines_amount number
 local Title = {}
 
-function Title:new(title)
-	title = title or {}
+--- @return Title
+function Title:new(buf)
+	self.__index = self
+	local title = {}
+	title.buf = buf
+	title.namespace = api.nvim_create_namespace(common.FILE_TYPE)
 	-- TODO: configruable start values (reset each title)
 	title.text = "Title Example"
 	title.len = 60
@@ -22,7 +27,8 @@ function Title:new(title)
 	return setmetatable(title, self)
 end
 
-function Title:generate()
+--- @return string[]
+function Title:generate_lines()
 	local filler_amount = (self.len - string.len(self.text) - 2) / 2
 	filler_amount = filler_amount / string.len(self.filler_seq)
 	local filler = ""
@@ -51,5 +57,7 @@ function Title:generate()
 	-- local pos = api.nvim_win_get_cursor(0)[1] - 1
 	-- api.nvim_buf_set_lines(0, pos, pos, false, lines)
 end
+
+M.Title = Title
 
 return M

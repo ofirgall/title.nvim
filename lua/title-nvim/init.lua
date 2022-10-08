@@ -9,7 +9,6 @@ end, {})
 
 M.setup = function(table)
 	local _ = table
-	window.create_autocmds()
 end
 
 return M
