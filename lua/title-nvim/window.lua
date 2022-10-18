@@ -15,10 +15,21 @@ local preview_higlight = "Comment"
 local MIN_WIDTH = 30
 local BASE_HEIGHT = 5
 
+local function always_odd(input, delta)
+	if (input + delta) % 2 == 0 then
+		return input + delta + delta
+	end
+	return input + delta
+end
+
+local function same(input, delta)
+	return input + delta
+end
+
 local line_to_option = {
 	{ title = "Title", key = "text" },
-	{ title = "Amount of lines", key = "lines_amount" },
-	{ title = "Title length", key = "len" },
+	{ title = "Amount of lines", key = "lines_amount", change_amount = always_odd },
+	{ title = "Title length", key = "len", change_amount = same },
 	{ title = "Filler sequence", key = "filler_seq" },
 }
 
@@ -106,8 +117,7 @@ local type_to_process_fn = {
 	end
 }
 
-local function change_option()
-	local buf = api.nvim_get_current_buf()
+local function get_option_on_cursor()
 	local target_line = api.nvim_win_get_cursor(0)[1]
 
 	local target_option = nil
@@ -118,8 +128,16 @@ local function change_option()
 		target_option = target_line - 1
 	end
 
-	local option = line_to_option[target_option]
-	local title = titles[buf]
+	return line_to_option[target_option]
+end
+
+local function get_current_title()
+	return titles[api.nvim_get_current_buf()]
+end
+
+local function change_option()
+	local title = get_current_title()
+	local option = get_option_on_cursor()
 
 	vim.ui.input({
 		prompt = option.title .. ': ',
@@ -145,6 +163,27 @@ local function change_option()
 	end)
 end
 
+local function change_option_amount(delta)
+	local option = get_option_on_cursor()
+	if option.change_amount == nil then
+		return
+	end
+
+	local title = get_current_title()
+	vim.pretty_print(title)
+	title[option.key] = option.change_amount(title[option.key], delta)
+
+	render_window(title)
+end
+
+local function increase_option()
+	change_option_amount(1)
+end
+
+local function decrease_option()
+	change_option_amount(-1)
+end
+
 local function set_mappings(buf)
 	map(buf, 'n', 'q', ':q<cr>')
 	map(buf, 'n', '<Esc>', ':q<cr>')
@@ -156,6 +195,12 @@ local function set_mappings(buf)
 	map(buf, 'n', 'A', change_option)
 	map(buf, 'n', 'o', change_option)
 	map(buf, 'n', 'O', change_option)
+
+	-- Add/decrease option
+	map(buf, 'n', 'l', increase_option)
+	map(buf, 'n', 'h', decrease_option)
+	map(buf, 'n', '<C-a>', increase_option)
+	map(buf, 'n', '<C-x>', decrease_option)
 end
 
 M.pop = function()
