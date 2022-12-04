@@ -61,7 +61,7 @@ local function render_window(title)
 		row = 0,
 		style = "minimal",
 		height = BASE_HEIGHT + title.lines_amount,
-		border = "rounded", -- TODO: [config]
+		border = config.preview.border
 	})
 
 	-- TODO: design with higlights
@@ -74,7 +74,7 @@ local function render_window(title)
 	local preview_lines = {}
 	for index, line in ipairs(lines) do
 		if index ~= 1 then -- First line is the text line
-			table.insert(preview_lines, { { line, config.preview_higlight } })
+			table.insert(preview_lines, { { line, config.preview.higlight } })
 		end
 	end
 
@@ -90,7 +90,7 @@ local function render_window(title)
 	-- All the other lines are lines[2:] and the border
 	api.nvim_buf_set_extmark(title.buf, title.namespace, curr_line, 0, {
 		virt_text_pos = "overlay",
-		virt_text = { { lines[1], config.preview_higlight } },
+		virt_text = { { lines[1], config.preview.higlight } },
 		virt_lines = preview_lines,
 	})
 	curr_line = 1 -- Only 1 real text line and virtual text next to it

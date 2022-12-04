@@ -3,7 +3,10 @@ local M = {}
 M.FILE_TYPE = "title-nvim"
 
 M.default_config = {
-	preview_highlight = 'Comment',
+	preview = {
+		highlight = 'Comment',
+		border = 'rounded',
+	},
 	default_title = {
 		text = 'Title',
 		len = 40,
