@@ -170,7 +170,6 @@ local function change_option_amount(delta)
 	end
 
 	local title = get_current_title()
-	vim.pretty_print(title)
 	title[option.key] = option.change_amount(title[option.key], delta)
 
 	render_window(title)
