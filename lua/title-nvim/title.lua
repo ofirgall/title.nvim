@@ -13,16 +13,15 @@ local common = require('title-nvim.common')
 local Title = {}
 
 --- @return Title
-function Title:new(buf)
+function Title:new(buf, title_opts)
 	self.__index = self
 	local title = {}
 	title.buf = buf
 	title.namespace = api.nvim_create_namespace(common.FILE_TYPE)
-	-- TODO: configruable start values (reset each title)
-	title.text = "Title Example"
-	title.len = 60
-	title.filler_seq = "-"
-	title.lines_amount = 1
+	title.text = title_opts.text
+	title.len = title_opts.len
+	title.filler_seq = title_opts.filler_sequence
+	title.lines_amount = title_opts.lines_amount
 
 	return setmetatable(title, self)
 end

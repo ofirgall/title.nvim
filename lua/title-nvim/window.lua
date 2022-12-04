@@ -9,8 +9,7 @@ local api = vim.api
 --		* Edit an existing title
 
 
--- TODO: configureable
-local preview_higlight = "Comment"
+local config = common.default_config
 
 local MIN_WIDTH = 30
 local BASE_HEIGHT = 5
@@ -69,12 +68,13 @@ local function render_window(title)
 	local curr_line = 0
 	api.nvim_buf_clear_namespace(title.buf, title.namespace, 0, -1)
 
+	-- TODO: Preview higlight doesn't work
 	-- Get ready lines with highlight
 	local lines = title:generate_lines()
 	local preview_lines = {}
 	for index, line in ipairs(lines) do
 		if index ~= 1 then -- First line is the text line
-			table.insert(preview_lines, { { line, preview_higlight } })
+			table.insert(preview_lines, { { line, config.preview_higlight } })
 		end
 	end
 
@@ -90,7 +90,7 @@ local function render_window(title)
 	-- All the other lines are lines[2:] and the border
 	api.nvim_buf_set_extmark(title.buf, title.namespace, curr_line, 0, {
 		virt_text_pos = "overlay",
-		virt_text = { { lines[1], preview_higlight } },
+		virt_text = { { lines[1], config.preview_higlight } },
 		virt_lines = preview_lines,
 	})
 	curr_line = 1 -- Only 1 real text line and virtual text next to it
@@ -217,17 +217,19 @@ local function set_mappings(buf)
 	map(buf, 'n', '<C-x>', decrease_option)
 end
 
-M.pop = function()
+M.new_title = function(title_opts)
 	local buf = api.nvim_create_buf(false, true)
 	api.nvim_buf_set_option(buf, "filetype", common.FILE_TYPE)
 
-	local title = Title:new(buf)
+	local title = Title:new(buf, title_opts)
 	titles[buf] = title
 
 	set_mappings(buf)
-	-- TODO: configruable, choose_title
-	-- choose_title()
 	render_window(titles[buf])
+end
+
+M.setup = function(user_config)
+	config = user_config
 end
 
 return M
