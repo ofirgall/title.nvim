@@ -52,10 +52,6 @@ function Title:generate_lines()
 	end
 
 	return lines
-
-	-- TODO: execute title
-	-- local pos = api.nvim_win_get_cursor(0)[1] - 1
-	-- api.nvim_buf_set_lines(0, pos, pos, false, lines)
 end
 
 M.Title = Title

@@ -183,9 +183,24 @@ local function decrease_option()
 	change_option_amount(-1)
 end
 
+local function confirm_title()
+	local title = get_current_title()
+	local title_lines = title:generate_lines()
+
+	api.nvim_buf_delete(title.buf, {force = true})
+	titles[title.buf] = nil
+
+	local pos = api.nvim_win_get_cursor(0)[1] - 1
+	api.nvim_buf_set_lines(0, pos, pos, false, title_lines)
+end
+
 local function set_mappings(buf)
+	-- Quit
 	map(buf, 'n', 'q', ':q<cr>')
 	map(buf, 'n', '<Esc>', ':q<cr>')
+
+	-- Confirm
+	map(buf, 'n', '<Enter>', confirm_title)
 
 	-- change option binds (insert)
 	map(buf, 'n', 'i', change_option)
