@@ -1,0 +1,38 @@
+================================================================================
+Introduction                                                        *title.nvim*
+
+                                                                    *title-nvim*
+Title generator
+
+--------------------------------------------------------------------------------
+
+M.setup({user_config})                                        *title.nvim.setup*
+
+    Parameters: ~
+        {user_config}  (table)  user config
+
+    Usage: ~
+        >
+            --Leave empty for default values
+            require('title-nvim').setup {
+            }
+
+            -- Or setup with custom parameters
+            require('title-nvim').setup {
+                -- Preview window settings
+                preview = {
+                    highlight = 'Comment', -- Highlight group of the preview
+                    border = 'rounded', -- Border of the preview window
+                },
+                -- Default title settings, `require('title-nvim').title({title_opts})`
+                default_title = {
+                    text = 'Title', -- Text
+                    len = 40, -- Length
+                    filler_sequence = '-', -- Filler sequence
+                    lines_amount = 3, -- Amount of lines of the title
+                }
+            }
+        <
+
+
+vim:tw=78:ts=8:noet:ft=help:norl:
