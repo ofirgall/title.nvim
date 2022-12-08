@@ -33,14 +33,14 @@ local TITLE_MARGIN = 2
 --- @return string[]
 function Title:generate_lines()
 	-- Setup filler for the title line
-	local filler_amount = (self.len - string.len(self.text) - TITLE_MARGIN) / 2
+	local filler_amount = (self.len - self.text:len() - TITLE_MARGIN) / 2
 	local filler_string = self.filler_seq
 	if self.bubble then
 		filler_string = ' '
 	end
 
-	local right_filler_padding = math.ceil(math.fmod(filler_amount, string.len(filler_string)))
-	local filler_seq_amount = filler_amount / string.len(filler_string)
+	local right_filler_padding = math.ceil(math.fmod(filler_amount, filler_string:len()))
+	local filler_seq_amount = filler_amount / filler_string:len()
 
 	-- Setup filler with only border
 	local left_filler = self.filler_seq
@@ -54,7 +54,7 @@ function Title:generate_lines()
 	end
 	right_filler = right_filler .. self.filler_seq
 	for i = 1, right_filler_padding, 1 do
-		local seq_index = i % string.len(self.filler_seq)
+		local seq_index = i % self.filler_seq:len()
 		if seq_index == 0 then
 			seq_index = 1
 		end
@@ -66,7 +66,7 @@ function Title:generate_lines()
 
 	-- Setup box
 	local box_border = ""
-	for _ = 1, self.len / string.len(self.filler_seq), 1 do
+	for _ = 1, self.len / self.filler_seq:len(), 1 do
 		box_border = box_border .. self.filler_seq
 	end
 
@@ -77,7 +77,7 @@ function Title:generate_lines()
 		box_line_filler = self.filler_seq
 	end
 	local box_line = ""
-	for _ = 1, self.len / string.len(box_line_filler), 1 do
+	for _ = 1, self.len / box_line_filler:len(), 1 do
 		box_line = box_line .. box_line_filler
 	end
 
