@@ -5,14 +5,12 @@ local api = vim.api
 
 
 -- TODO: Features
+--		* Option to generete with comment string
 --		* Reedit last title
 --		* Edit an existing title
 
 
 local config = common.default_config
-
-local MIN_WIDTH = 30
-local BASE_HEIGHT = 5
 
 local function always_odd(input, delta)
 	if (input + delta) % 2 == 0 then
@@ -25,12 +23,20 @@ local function same(input, delta)
 	return input + delta
 end
 
+local function toggle_bool(input, _)
+	return not input
+end
+
 local line_to_option = {
 	{ title = "Title", key = "text" },
 	{ title = "Amount of lines", key = "lines_amount", change_amount = always_odd },
 	{ title = "Title length", key = "len", change_amount = same },
 	{ title = "Filler sequence", key = "filler_seq" },
+	{ title = "Bubble", key = "bubble", change_amount = toggle_bool },
 }
+
+local MIN_WIDTH = 30
+local BASE_HEIGHT = #line_to_option + 1
 
 ---@type Title[]
 local titles = {}
@@ -98,7 +104,7 @@ local function render_window(title)
 	-- Draw options
 	local options_lines = {}
 	for _, option in ipairs(line_to_option) do
-		table.insert(options_lines, option.title .. ': ' .. title[option.key])
+		table.insert(options_lines, option.title .. ': ' .. tostring(title[option.key]))
 	end
 	api.nvim_buf_set_lines(title.buf, curr_line, -1, false, options_lines)
 

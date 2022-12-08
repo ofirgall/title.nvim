@@ -12,6 +12,7 @@ M.default_config = {
 		len = 40,
 		filler_sequence = '-',
 		lines_amount = 3,
+		bubble = true,
 	}
 }
 
