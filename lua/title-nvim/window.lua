@@ -53,7 +53,7 @@ end
 
 ---@param title Title
 local function render_window(title)
-	local win_width = math.max(MIN_WIDTH, title.len - 1)
+	local win_width = math.max(MIN_WIDTH, title.len)
 
 	-- TODO: design with higlights
 	local curr_line = 0

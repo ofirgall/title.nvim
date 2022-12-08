@@ -28,30 +28,41 @@ function Title:new(buf, title_opts)
 	return setmetatable(title, self)
 end
 
+local TITLE_MARGIN = 2
+
 --- @return string[]
 function Title:generate_lines()
-	-- TODO: make length dividable by len(self.filler_seq)
 	-- Setup filler for the title line
-	local filler_amount = (self.len - string.len(self.text) - 2) / 2
+	local filler_amount = (self.len - string.len(self.text) - TITLE_MARGIN) / 2
 	local filler_string = self.filler_seq
 	if self.bubble then
 		filler_string = ' '
 	end
-	filler_amount = filler_amount / string.len(filler_string)
+
+	local right_filler_padding = math.ceil(math.fmod(filler_amount, string.len(filler_string)))
+	local filler_seq_amount = filler_amount / string.len(filler_string)
 
 	-- Setup filler with only border
 	local left_filler = self.filler_seq
-	for _ = 1, filler_amount - 1, 1 do
+	for _ = 1, filler_seq_amount - 1, 1 do
 		left_filler = left_filler .. filler_string
 	end
 
 	local right_filler = ''
-	for _ = 1, filler_amount - 1, 1 do
+	for _ = 1, filler_seq_amount - 1, 1 do
 		right_filler = right_filler .. filler_string
 	end
 	right_filler = right_filler .. self.filler_seq
+	for i = 1, right_filler_padding, 1 do
+		local seq_index = i % string.len(self.filler_seq)
+		if seq_index == 0 then
+			seq_index = 1
+		end
+		right_filler = right_filler .. self.filler_seq:sub(seq_index, seq_index)
+	end
 
-	local title_line = left_filler .. ' ' .. self.text .. ' ' .. right_filler
+	local title = ' ' .. self.text .. ' ' -- Add TITLE_MARGIN
+	local title_line = left_filler .. title .. right_filler
 
 	-- Setup box
 	local box_border = ""
