@@ -53,22 +53,7 @@ end
 
 ---@param title Title
 local function render_window(title)
-	local win = get_buf_window(title.buf)
-	if win ~= nil then
-		api.nvim_win_close(win, true)
-	end
-
 	local win_width = math.max(MIN_WIDTH, title.len - 1)
-
-	win = api.nvim_open_win(title.buf, true, {
-		relative = "cursor",
-		width = win_width,
-		col = 0,
-		row = 0,
-		style = "minimal",
-		height = BASE_HEIGHT + title.lines_amount,
-		border = config.preview.border
-	})
 
 	-- TODO: design with higlights
 	local curr_line = 0
@@ -107,6 +92,21 @@ local function render_window(title)
 		table.insert(options_lines, option.title .. ': ' .. tostring(title[option.key]))
 	end
 	api.nvim_buf_set_lines(title.buf, curr_line, -1, false, options_lines)
+
+	local win = get_buf_window(title.buf)
+	if win ~= nil then
+		api.nvim_win_close(win, true)
+	end
+
+	win = api.nvim_open_win(title.buf, true, {
+		relative = "cursor",
+		width = win_width,
+		col = 0,
+		row = 0,
+		style = "minimal",
+		height = BASE_HEIGHT + title.lines_amount,
+		border = config.preview.border
+	})
 
 end
 
