@@ -1,6 +1,6 @@
 local M = {}
 local api = vim.api
-local common = require('title-nvim.common')
+local common = require("title-nvim.common")
 
 --- @class Title
 --- @field namespace number
@@ -36,7 +36,7 @@ function Title:generate_lines()
 	local filler_amount = (self.len - self.text:len() - TITLE_MARGIN) / 2
 	local filler_string = self.filler_seq
 	if self.bubble then
-		filler_string = ' '
+		filler_string = " "
 	end
 
 	local right_filler_padding = math.ceil(math.fmod(filler_amount, filler_string:len()))
@@ -48,7 +48,7 @@ function Title:generate_lines()
 		left_filler = left_filler .. filler_string
 	end
 
-	local right_filler = ''
+	local right_filler = ""
 	for _ = 1, filler_seq_amount - 1, 1 do
 		right_filler = right_filler .. filler_string
 	end
@@ -61,7 +61,7 @@ function Title:generate_lines()
 		right_filler = right_filler .. self.filler_seq:sub(seq_index, seq_index)
 	end
 
-	local title = ' ' .. self.text .. ' ' -- Add TITLE_MARGIN
+	local title = " " .. self.text .. " " -- Add TITLE_MARGIN
 	local title_line = left_filler .. title .. right_filler
 
 	-- Setup box
@@ -72,7 +72,7 @@ function Title:generate_lines()
 
 	local box_line_filler = ""
 	if self.bubble then
-		box_line_filler = ' '
+		box_line_filler = " "
 	else
 		box_line_filler = self.filler_seq
 	end

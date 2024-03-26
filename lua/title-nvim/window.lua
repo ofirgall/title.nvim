@@ -1,14 +1,12 @@
 local M = {}
-local common = require('title-nvim.common')
-local Title = require('title-nvim.title').Title
+local common = require("title-nvim.common")
+local Title = require("title-nvim.title").Title
 local api = vim.api
-
 
 -- TODO: Features
 --		* Option to generete with comment string
 --		* Reedit last title
 --		* Edit an existing title
-
 
 local config = common.default_config
 
@@ -89,7 +87,7 @@ local function render_window(title)
 	-- Draw options
 	local options_lines = {}
 	for _, option in ipairs(line_to_option) do
-		table.insert(options_lines, option.title .. ': ' .. tostring(title[option.key]))
+		table.insert(options_lines, option.title .. ": " .. tostring(title[option.key]))
 	end
 	api.nvim_buf_set_lines(title.buf, curr_line, -1, false, options_lines)
 
@@ -105,9 +103,8 @@ local function render_window(title)
 		row = 0,
 		style = "minimal",
 		height = BASE_HEIGHT + title.lines_amount,
-		border = config.preview.border
+		border = config.preview.border,
 	})
-
 end
 
 local map = function(buf, mode, lhs, rhs)
@@ -120,7 +117,7 @@ local type_to_process_fn = {
 	end,
 	["string"] = function(input)
 		return input
-	end
+	end,
 }
 
 local function get_option_on_cursor()
@@ -146,8 +143,8 @@ local function change_option()
 	local option = get_option_on_cursor()
 
 	vim.ui.input({
-		prompt = option.title .. ': ',
-		default = tostring(title[option.key])
+		prompt = option.title .. ": ",
+		default = tostring(title[option.key]),
 	}, function(input)
 		if input == "" or input == nil then
 			return
@@ -193,7 +190,7 @@ local function confirm_title()
 	local title = get_current_title()
 	local title_lines = title:generate_lines()
 
-	api.nvim_buf_delete(title.buf, {force = true})
+	api.nvim_buf_delete(title.buf, { force = true })
 	titles[title.buf] = nil
 
 	local pos = api.nvim_win_get_cursor(0)[1] - 1
@@ -202,25 +199,25 @@ end
 
 local function set_mappings(buf)
 	-- Quit
-	map(buf, 'n', 'q', ':q<cr>')
-	map(buf, 'n', '<Esc>', ':q<cr>')
+	map(buf, "n", "q", ":q<cr>")
+	map(buf, "n", "<Esc>", ":q<cr>")
 
 	-- Confirm
-	map(buf, 'n', '<Enter>', confirm_title)
+	map(buf, "n", "<Enter>", confirm_title)
 
 	-- change option binds (insert)
-	map(buf, 'n', 'i', change_option)
-	map(buf, 'n', 'I', change_option)
-	map(buf, 'n', 'a', change_option)
-	map(buf, 'n', 'A', change_option)
-	map(buf, 'n', 'o', change_option)
-	map(buf, 'n', 'O', change_option)
+	map(buf, "n", "i", change_option)
+	map(buf, "n", "I", change_option)
+	map(buf, "n", "a", change_option)
+	map(buf, "n", "A", change_option)
+	map(buf, "n", "o", change_option)
+	map(buf, "n", "O", change_option)
 
 	-- Add/decrease option
-	map(buf, 'n', 'l', increase_option)
-	map(buf, 'n', 'h', decrease_option)
-	map(buf, 'n', '<C-a>', increase_option)
-	map(buf, 'n', '<C-x>', decrease_option)
+	map(buf, "n", "l", increase_option)
+	map(buf, "n", "h", decrease_option)
+	map(buf, "n", "<C-a>", increase_option)
+	map(buf, "n", "<C-x>", decrease_option)
 end
 
 M.new_title = function(title_opts)
